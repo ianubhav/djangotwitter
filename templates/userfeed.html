@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+	{% load static %}
+	<meta charset="UTF-8">
+	<title>Twitter Client</title>
+   	<link href='http://fonts.googleapis.com/css?family=Quicksand:300,400' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lato:400,300' rel='stylesheet' type='text/css'>
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
+    <link href="{% static "css/feeds.css" %}" rel="stylesheet">
+</head>
+<body>
+	<a href="/">Home</a>
+	<a href="/globalfeed">Globalfeed</a>
+	<a href="/logout">Logout</a>
+		<span class="first"> 
+			@{{ username }}
+			{% if follow == 1 %}
+				<span class="icon-heart new follow-but">Following</span>
+			{% else %}
+				<span class="icon-heart new follow-but">Follow</span>
+			{% endif %}
+			
+		</span>
+		<ul class="timeline">
+			{% if not tweets %}
+    			<h3>No Tweets Yet</h3>
+			{% endif %}
+			{% for tweet in tweets %}
+				<li>
+					<div class="avatar">
+	         			 <img src="http://www.pixempire.com/images/preview/super-simple-avatar-icon.jpg">
+						<div class="hover">
+							<div class="icon-twitter"></div>
+						</div>
+					</div>
+					<div class="bubble-container">
+						<div class="bubble">
+						<div class="retweet">
+							<div class="icon-retweet"></div>
+						</div>
+							<h3>@{{ username }}</h3> tweeted<br/>
+								{{ tweet.text }}
+							
+						</div>
+						
+						<div class="arrow"></div>
+					</div>
+				</li>
+			{% endfor %}	
+		</ul>
+
+	</div>
+</body>
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+  <script type="text/javascript">
+  // attach variables from Django to the body node of the document
+  $('body').data('target_id', {{target_id}});
+</script>
+<script src="{% static "js/userfeed.js" %}">
+</script>
+
+</html>

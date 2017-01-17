@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+	{% load static %}
+	<meta charset="UTF-8">
+	<title>Twitter Client</title>
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+   	<link href='http://fonts.googleapis.com/css?family=Quicksand:300,400' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lato:400,300' rel='stylesheet' type='text/css'>
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
+    <link href="{% static "css/feeds.css" %}" rel="stylesheet">
+
+</head>
+<body>
+		<a href="/">Home</a>
+	<a href="/globalfeed">Globalfeed</a>
+	<a href="/logout">Logout</a>
+		<span class="first"> 
+			@{{ username }}
+			<form action="/posttweet/" id="usrform" method="post">
+			<br>
+			  <textarea rows="2" cols="50" name="text" form="usrform" placeholder="Tweet Something"></textarea>
+			  <input type="submit" value="Tweet">
+			</form>
+		</span>
+			
+		<ul class="timeline">
+			{% if not tweets %}
+    			<h3>No Tweets Yet</h3>
+			{% endif %}
+			{% for tweet in tweets %}
+				<li class='tweets' tweet={{tweet.id}}>
+					
+					<div class="bubble-container">
+						<div class="bubble">
+						<div class="retweet">
+						<a href="#myPopup" data-rel="popup">
+							<div class="icon-retweet"></div>
+						</a>
+						</div>
+							<h3>@<a href="/user/{{ tweet.user.username }}">{{ tweet.user.username }}</a>
+							</h3>
+							{% ifequal tweet.get_cname "tweet" %}
+							 tweeted
+							 <br/>
+								{{ tweet.text }}
+							{% else %}
+							 retweeted
+							 	 <br/>
+							 	<font color="red"> <i>{{tweet.tweet.text}}</i></font>
+							 	<br/>
+								{{ tweet.text }}
+							{% endifequal %}
+							
+							
+						</div>
+						
+						<div class="arrow"></div>
+					</div>
+				</li>
+			{% endfor %}	
+		</ul>
+
+	</div>
+	<div data-role="popup" id="myPopup" class="ui-content" style="min-width:250px;">
+      
+          <label for="retweet" class="ui-hidden-accessible">Write Something:</label>
+          <input type="text" name="retweet" id="retweet" placeholder="Write Something:">
+          <input class='submit_re' type="submit" data-inline="true" value="Retweet">
+    </div>
+</body>
+<script type="text/javascript">
+	var tweet_id = 0;
+	$( ".tweets" ).click(function() {
+		tweet_id = parseInt(this.attributes['tweet'].value)
+	});
+	$( ".submit_re" ).click(function() {
+		$.ajax({
+			type: "POST",
+			url: '/retweet/',
+			data: {'text':$('#retweet').val(),'tweet_id': tweet_id},
+		});
+	});
+
+
+</script>
+</html>
